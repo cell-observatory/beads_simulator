@@ -3,7 +3,6 @@ Beads simulator
 ====================================================
 
 [![python](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=flat&logo=python&logoColor=3776AB)](https://www.python.org/)
-[![license](https://img.shields.io/github/license/cell-observatory/beads_simulator.svg?style=flat&logo=git&logoColor=white)](https://opensource.org/license/bsd-2-clause/)
 [![issues](https://img.shields.io/github/issues/cell-observatory/beads_simulator.svg?style=flat&logo=github)](https://github.com/cell-observatory/beads_simulator/issues)
 [![pr](https://img.shields.io/github/issues-pr/cell-observatory/beads_simulator.svg?style=flat&logo=github)](https://github.com/cell-observatory/beads_simulator/pulls)
 
@@ -30,6 +29,15 @@ conda/mamba create --name beads --file requirements.txt
 Or use `pip install -r requirements.txt`
 
 
+## Running the simulator
+Activate conda environment
+```shell
+conda activate beads
+```
+Or run python directly 
+```shell
+~/miniforge3/envs/beads/bin/python command-here
+```
 
 # Features
 
