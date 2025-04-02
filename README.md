@@ -1,16 +1,79 @@
 
-Beads simulator
+Beads simulator for AOViFT
 ====================================================
 
+[![arXiv](https://img.shields.io/badge/arXiv-2503.12593-b31b1b.svg)](https://arxiv.org/abs/2503.12593)
 [![python](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=flat&logo=python&logoColor=3776AB)](https://www.python.org/)
+[![license](https://img.shields.io/github/license/cell-observatory/beads_simulator.svg?style=flat&logo=git&logoColor=white)](https://opensource.org/license/bsd-2-clause/)
 [![issues](https://img.shields.io/github/issues/cell-observatory/beads_simulator.svg?style=flat&logo=github)](https://github.com/cell-observatory/beads_simulator/issues)
 [![pr](https://img.shields.io/github/issues-pr/cell-observatory/beads_simulator.svg?style=flat&logo=github)](https://github.com/cell-observatory/beads_simulator/pulls)
 
+<div style="text-align: center; width: 100%; display: inline-block; text-align: center;" >
+ <h2>Fourier-Based 3D Multistage Transformer for Aberration Correction in Multicellular Specimens</h2>
+  <p>
+  Thayer Alshaabi<sup>1,2*</sup>, Daniel E. Milkie<sup>1</sup>, Gaoxiang Liu<sup>2</sup>, Cyna Shirazinejad<sup>2</sup>, Jason L. Hong<sup>2</sup>, Kemal Achour<sup>2</sup>, Frederik Görlitz<sup>2</sup>, Ana Milunovic-Jevtic<sup>2</sup>, Cat Simmons<sup>2</sup>, Ibrahim S. Abuzahriyeh<sup>2</sup>, Erin Hong<sup>2</sup>, Samara Erin Williams<sup>2</sup>, Nathanael Harrison<sup>2</sup>, Evan Huang<sup>2</sup>, Eun Seok Bae<sup>2</sup>, Alison N. Killilea<sup>2</sup>, David G. Drubin<sup>2</sup>, Ian A. Swinburne<sup>2</sup>, Srigokul Upadhyayula<sup>2,3,4*</sup>, Eric Betzig<sup>1,2,5*</sup>
+  </p>
+  <h5>
+    <sup>1</sup>HHMI, <sup>2</sup>UC Berkeley, <sup>3</sup>Lawrence Berkeley National Laboratory, <sup>4</sup>Chan Zuckerberg Biohub, <sup>5</sup>Helen Wills Neuroscience Institute
+  </h5>
+  <div align="center">
+
+  [![arXiv](https://img.shields.io/badge/arXiv-2503.12593-b31b1b.svg?style=for-the-badge&logo=arxiv&logoColor=white)](https://arxiv.org/abs/2503.12593) &nbsp;
+  [![Pytest](https://img.shields.io/badge/pytest-suite-%23ffffff.svg?style=for-the-badge&logo=pytest&logoColor=2f9fe3)](https://github.com/cell-observatory/beads_simulator/tree/main/tests) &nbsp;
+  [![BibTeX](https://img.shields.io/badge/BibTeX-reference-%23008080.svg?style=for-the-badge&logo=latex&logoColor=white)](#bibtex)
+
+  </div>
+</div>
+
+
 * [Installation](#installation)
 * [Features](#features)
-* [Testing](#testing)
+  * [Wavefront simulation](#wavefront-simulation)
+  * [Fourier embedding](#fourier-embedding)
+  * [PSF dataset generator](#psf-dataset-generator)
+  * [Beads dataset generator](#beads-dataset-generator)
+  * [Multimodal beads dataset generator](#multimodal-beads-dataset-generator)
+
 
 # Installation
+
+## Dependencies
+
+> [!IMPORTANT] 
+> Source code is tested on the following operating systems:
+> - **Ubuntu 22.04** 
+> - **Rocky Linux 8.10 & 9.3**
+> - **Windows 11 Pro 22621**
+
+```requirements
+numpy
+pandas
+cupy
+cuda-version==12.8
+astropy
+seaborn
+scikit-image
+scikit-spatial
+pytest
+pytest-order
+matplotlib==3.8.4
+ujson
+zarr
+pycudadecon
+dphtools
+tifffile==2023.9.18
+imagecodecs==2023.9.18
+nvitop
+pycuda
+pytest
+tqdm
+cachetools
+line_profiler_pycharm
+```
+
+> [!CAUTION] 
+> NVIDIA GPU with a driver release **545** or later, and **CUDA 12.8**.
+
 
 ## Clone repository to your host system
 ```shell
@@ -34,18 +97,17 @@ Activate conda environment
 ```shell
 conda activate beads
 ```
-Or run python directly 
-```shell
-~/miniforge3/envs/beads/bin/python command-here
-```
 
 # Features
 
-## Wavefront simulation ([wavefront.py](src/wavefront.py))
+* [Wavefront simulation](#wavefront-simulation)
+* [Fourier embedding](#fourier-embedding)
+* [PSF dataset generator](#psf-dataset-generator)
+* [Beads dataset generator](#beads-dataset-generator)
+* [Multimodal beads dataset generator](#multimodal-beads-dataset-generator)
 
-<div align="center">
-  <img class="center" src="https://www.dropbox.com/scl/fi/i5bets9ewgue7sd3n8irl/distributions.png?rlkey=yc8flirdxjx92asbcuk2smuuy&raw=1" width="100%" />
-</div>
+
+## Wavefront simulation
 
 - Simulation of ideal and aberrated wavefronts where the amplitudes of the zernike modes are drawn from a given distribution:
   - Single
@@ -54,19 +116,113 @@ Or run python directly
   - Powerlaw
   - Dirichlet
  
-## Fourier embedding ([embedding.py](src/embedding.py))
+> [!TIP]
+> For more options, please refer to [wavefront.py](src/wavefront.py)
+
+
+<div align="center">
+  <img class="center" src="https://www.dropbox.com/scl/fi/i5bets9ewgue7sd3n8irl/distributions.png?rlkey=yc8flirdxjx92asbcuk2smuuy&raw=1" width="100%" />
+</div>
+
+
+
+## Fourier embedding
+
+> [!TIP]
+> For more options, please refer to [embedding.py](src/embedding.py)
 
 <div align="center">
   <img class="center" src="https://www.dropbox.com/scl/fi/4miprr445ujle7hu3djei/embedding.png?rlkey=yna1zfy986yr0mehwz1uwpnbn&raw=1" width="100%" />
 </div>
 
-## PSF dataset generator ([psf_dataset.py](src/psf_dataset.py))
 
-Supported PSFs ([synthatic.py](src/synthatic.py))
-  - Lattice light sheets
-  - Widefield
-  - 2photon
-  - Confocal
+### Aberrated PSF 
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py -k test_random_aberrated_psf
+```
+
+```shell
+=========================================================== test session starts ===========================================================
+platform linux -- Python 3.12.9, pytest-8.3.4, pluggy-1.5.0 -- /home/thayer/miniforge3/envs/beads/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /home/thayer/Github/beads_simulator
+plugins: order-1.3.0
+collected 9 items / 8 deselected / 1 selected
+
+tests/test_datasets.py::test_random_aberrated_psf Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+PASSED
+=============================================== 1 passed, 8 deselected, 1 warning in 7.68s ================================================
+```
+
+
+### LLS defocused PSF 
+
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py -k test_random_defocused_psf
+```
+
+```shell
+=========================================================== test session starts ===========================================================
+platform linux -- Python 3.12.9, pytest-8.3.4, pluggy-1.5.0 -- /home/thayer/miniforge3/envs/beads/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /home/thayer/Github/beads_simulator
+plugins: order-1.3.0
+collected 9 items / 8 deselected / 1 selected
+
+tests/test_datasets.py::test_random_defocused_psf Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+PASSED
+
+=============================================== 1 passed, 8 deselected, 1 warning in 7.68s ================================================
+```
+
+### Aberrated and LLS defocused PSF 
+
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py -k test_random_aberrated_defocused_psf
+```
+
+```shell
+=========================================================== test session starts ===========================================================
+platform linux -- Python 3.12.9, pytest-8.3.4, pluggy-1.5.0 -- /home/thayer/miniforge3/envs/beads/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /home/thayer/Github/beads_simulator
+plugins: order-1.3.0
+collected 9 items / 8 deselected / 1 selected
+
+tests/test_datasets.py::test_random_aberrated_defocused_psf Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+PASSED
+=============================================== 1 passed, 8 deselected, 1 warning in 7.71s ================================================
+```
+
+
+## PSF dataset generator
+
+> [!TIP]
+> For more options, please refer to [psf_dataset.py](src/psf_dataset.py)
+
+
+
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py -k test_psf_dataset
+```
+
+```shell
+=========================================================== test session starts ===========================================================
+platform linux -- Python 3.12.9, pytest-8.3.4, pluggy-1.5.0 -- /home/thayer/miniforge3/envs/beads/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /home/thayer/Github/beads_simulator
+plugins: order-1.3.0
+collected 9 items / 8 deselected / 1 selected
+
+tests/test_datasets.py::test_psf_dataset Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [00:03<00:00,  2.83it/s]
+PASSED
+===================================================== 1 passed, 8 deselected in 5.19s =====================================================
+```
+
+
+> [!TIP]
+> For more options, please refer to `psf_dataset.py --help`
 
 ```shell
 usage: psf_dataset.py [-h] [--filename FILENAME] [--outdir OUTDIR] [--emb] [--iters ITERS] [--kernels] [--noise] [--normalize] [--x_voxel_size X_VOXEL_SIZE] [--y_voxel_size Y_VOXEL_SIZE] [--z_voxel_size Z_VOXEL_SIZE] [--input_shape INPUT_SHAPE] [--modes MODES] [--min_photons MIN_PHOTONS] [--max_photons MAX_PHOTONS] [--psf_type PSF_TYPE] [--dist DIST] [--mode_dist MODE_DIST] [--gamma GAMMA] [--signed] [--rotate] [--min_amplitude MIN_AMPLITUDE]
@@ -124,9 +280,31 @@ options:
 ```
 
 
-## Beads dataset generator ([multipoint_dataset.py](src/multipoint_dataset.py))
+## Beads dataset generator
 
 Synthatic samples with 1 up to $n$ beads randomly placed in a given FOV
+
+
+```shell
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py -k test_multipoint_dataset
+```
+```shell
+=========================================================== test session starts ===========================================================
+platform linux -- Python 3.12.9, pytest-8.3.4, pluggy-1.5.0 -- /home/thayer/miniforge3/envs/beads/bin/python3.12
+cachedir: .pytest_cache
+rootdir: /home/thayer/Github/beads_simulator
+plugins: order-1.3.0
+collected 9 items / 8 deselected / 1 selected
+
+tests/test_datasets.py::test_multipoint_dataset Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [00:14<00:00,  1.48s/it]
+PASSED
+=============================================== 1 passed, 8 deselected, 1 warning in 16.47s ===============================================
+```
+
+
+> [!TIP]
+> For more options, please refer to [multipoint_dataset.py](src/multipoint_dataset.py)
 
 ```shell
 usage: multipoint_dataset.py [-h] [--filename FILENAME] [--npoints NPOINTS] [--outdir OUTDIR] [--emb] [--embedding_option EMBEDDING_OPTION] [--iters ITERS] [--kernels] [--noise] [--normalize] [--x_voxel_size X_VOXEL_SIZE] [--y_voxel_size Y_VOXEL_SIZE] [--z_voxel_size Z_VOXEL_SIZE] [--input_shape INPUT_SHAPE] [--random_crop RANDOM_CROP] [--modes MODES] [--min_photons MIN_PHOTONS] [--max_photons MAX_PHOTONS] [--psf_type PSF_TYPE] [--dist DIST]
@@ -201,39 +379,32 @@ options:
                         optional toggle to skip preprocessing input data using the DoG filter
 ```
 
-# Testing
 
-Running `tests/test_datasets.py` will create a few example datasets.
+
+## Multimodal beads dataset generator
+
+Synthatic samples with 1 up to $n$ beads randomly placed in a given FOV
+
+> [!NOTE]
+> Supported PSFs ([synthatic.py](src/synthatic.py))
+>  - Lattice light sheets
+>  - Widefield
+>  - 2photon
+>  - Confocal
+
+
 ```shell
-pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py
+pytest -s -v --disable-pytest-warnings --color=yes tests/test_datasets.py -k test_multimodal_dataset
 ```
 
 ```shell
+=========================================================== test session starts ===========================================================
 platform linux -- Python 3.12.9, pytest-8.3.4, pluggy-1.5.0 -- /home/thayer/miniforge3/envs/beads/bin/python3.12
 cachedir: .pytest_cache
 rootdir: /home/thayer/Github/beads_simulator
 plugins: order-1.3.0
-collected 9 items
+collected 9 items / 8 deselected / 1 selected
 
-tests/test_datasets.py::test_theoretical_widefield_simulator Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_True
-PASSED
-tests/test_datasets.py::test_experimental_widefield_simulator Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-PASSED
-tests/test_datasets.py::test_random_aberrated_psf Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-PASSED
-tests/test_datasets.py::test_random_defocused_psf Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-PASSED
-tests/test_datasets.py::test_random_aberrated_defocused_psf Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-PASSED
-tests/test_datasets.py::test_psf_dataset Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [00:03<00:00,  2.91it/s]
-PASSED
-tests/test_datasets.py::test_multipoint_dataset Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [00:13<00:00,  1.40s/it]
-PASSED
-tests/test_datasets.py::test_randomize_object_size_dataset Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/_home_thayer_Github_beads_simulator_lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [00:15<00:00,  1.50s/it]
-PASSED
 tests/test_datasets.py::test_multimodal_dataset Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
 Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/.._lattice_YuMB_NAlattice0p35_NAAnnulusMax0p40_NAsigma0p1.mat_shape_128-128-128_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
 Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/.._lattice_Gaussian_NAexc0p21_NAsigma0p21_annulus0p4-0p2_crop0p1_FWHM51p0.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
@@ -250,16 +421,32 @@ Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/Sy
 Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/.._lattice_ACHex_NAexc0p40_NAsigma0p075_annulus0p6-0p2_crop0p1_FWHM52p0.mat_shape_128-128-128_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
 Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/.._lattice_MBHex_NAexc0p43_annulus0p47_0p40_crop0p08_FWHM48p0.mat_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
 Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/.._lattice_MBHex_NAexc0p43_annulus0p47_0p40_crop0p08_FWHM48p0.mat_shape_128-128-128_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
-100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [02:37<00:00, 15.79s/it]
+Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/widefield_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/widefield_shape_128-128-128_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/2photon_shape_64-64-64_lam_0.92_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/2photon_shape_128-128-128_lam_0.92_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/confocal_shape_64-64-64_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+Loading cached SyntheticPSF instance from /home/thayer/Github/beads_simulator/SyntheticPSFCache/confocal_shape_128-128-128_lam_0.51_na_1.0_ri_1.33_x_0.097_y_0.097_z_0.2_twd_simulator_False
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████| 10/10 [04:48<00:00, 28.83s/it]
 PASSED
+
+========================================= 1 passed, 8 deselected, 1 warning in 290.55s (0:04:50) ==========================================
 ```
+
 
 
 # BibTeX
 
 ```bibtex
-comming soon
+@article{alshaabi2025fourier,
+  title={Fourier-Based 3D Multistage Transformer for Aberration Correction in Multicellular Specimens},
+  author={Thayer Alshaabi and Daniel E. Milkie and Gaoxiang Liu and Cyna Shirazinejad and Jason L. Hong and Kemal Achour and Frederik Görlitz and Ana Milunovic-Jevtic and Cat Simmons and Ibrahim S. Abuzahriyeh and Erin Hong and Samara Erin Williams and Nathanael Harrison and Evan Huang and Eun Seok Bae and Alison N. Killilea and David G. Drubin and Ian A. Swinburne and Srigokul Upadhyayula and Eric Betzig},
+  journal={arXiv preprint arXiv:2503.12593},
+  year={2025},
+  url={https://arxiv.org/abs/2503.12593},
+}
 ```
+
 
 # License 
 

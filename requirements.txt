@@ -20,3 +20,4 @@ pycuda
 pytest
 tqdm
 cachetools
+line_profiler_pycharm
